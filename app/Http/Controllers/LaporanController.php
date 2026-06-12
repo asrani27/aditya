@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
 use App\Models\Pegawai;
 use App\Models\Biaya;
 use App\Models\Customer;
@@ -83,15 +84,25 @@ class LaporanController extends Controller
     /**
      * Export Proyek to PDF
      */
-    public function exportProyek()
+    public function exportProyek(Request $request)
     {
-        $proyeks = Proyek::with('customer')->orderBy('created_at', 'desc')->get();
+        $query = Proyek::with('customer');
+        
+        if ($request->has('start') && $request->has('end')) {
+            $start = $request->start;
+            $end = $request->end;
+            $query->whereBetween('tanggal_mulai', [$start, $end]);
+        }
+        
+        $proyeks = $query->orderBy('created_at', 'desc')->get();
         
         $pdf = Pdf::loadView('admin.laporan.pdf.proyek', [
             'proyeks' => $proyeks,
             'title' => 'Laporan Data Proyek',
             'company' => 'PT. SUKA TEKNIK PROPERTI',
-            'date' => date('d F Y')
+            'date' => date('d F Y'),
+            'filterStart' => $request->start ?? null,
+            'filterEnd' => $request->end ?? null
         ]);
         
         $pdf->setPaper('A4', 'landscape');
@@ -102,9 +113,17 @@ class LaporanController extends Controller
     /**
      * Export Penerimaan Dana to PDF
      */
-    public function exportPenerimaan()
+    public function exportPenerimaan(Request $request)
     {
-        $penerimaans = PenerimaanDana::with('proyek')->orderBy('tanggal', 'desc')->get();
+        $query = PenerimaanDana::with('proyek');
+        
+        if ($request->has('start') && $request->has('end')) {
+            $start = $request->start;
+            $end = $request->end;
+            $query->whereBetween('tanggal', [$start, $end]);
+        }
+        
+        $penerimaans = $query->orderBy('tanggal', 'desc')->get();
         
         $total = $penerimaans->sum('dana_diterima');
         
@@ -113,7 +132,9 @@ class LaporanController extends Controller
             'total' => $total,
             'title' => 'Laporan Penerimaan Dana',
             'company' => 'PT. SUKA TEKNIK PROPERTI',
-            'date' => date('d F Y')
+            'date' => date('d F Y'),
+            'filterStart' => $request->start ?? null,
+            'filterEnd' => $request->end ?? null
         ]);
         
         $pdf->setPaper('A4', 'landscape');
@@ -124,9 +145,17 @@ class LaporanController extends Controller
     /**
      * Export Pengeluaran Dana to PDF
      */
-    public function exportPengeluaran()
+    public function exportPengeluaran(Request $request)
     {
-        $pengeluarans = PengeluaranDana::with('proyek')->orderBy('tanggal', 'desc')->get();
+        $query = PengeluaranDana::with('proyek');
+        
+        if ($request->has('start') && $request->has('end')) {
+            $start = $request->start;
+            $end = $request->end;
+            $query->whereBetween('tanggal', [$start, $end]);
+        }
+        
+        $pengeluarans = $query->orderBy('tanggal', 'desc')->get();
         
         $total = $pengeluarans->sum('total');
         
@@ -135,7 +164,9 @@ class LaporanController extends Controller
             'total' => $total,
             'title' => 'Laporan Pengeluaran Dana',
             'company' => 'PT. SUKA TEKNIK PROPERTI',
-            'date' => date('d F Y')
+            'date' => date('d F Y'),
+            'filterStart' => $request->start ?? null,
+            'filterEnd' => $request->end ?? null
         ]);
         
         $pdf->setPaper('A4', 'landscape');

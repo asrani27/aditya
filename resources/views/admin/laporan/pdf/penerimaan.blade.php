@@ -108,6 +108,9 @@
         <div class="separator"></div>
         <p class="title">{{ $title }}</p>
         <p class="date">Tanggal Cetak: {{ $date }}</p>
+        @if(isset($filterStart) && isset($filterEnd))
+        <p class="date">Filter: {{ \Carbon\Carbon::parse($filterStart)->format('d/m/Y') }} - {{ \Carbon\Carbon::parse($filterEnd)->format('d/m/Y') }}</p>
+        @endif
     </div>
 
     <table>
