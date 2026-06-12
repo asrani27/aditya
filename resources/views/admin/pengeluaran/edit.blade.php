@@ -253,13 +253,22 @@
         const hargaInput = row.querySelector('.harga-input');
         const jumlahInput = row.querySelector('.jumlah-input');
         
-        const harga = hargaInput ? Number(hargaInput.value) : 0;
-        const jumlah = jumlahInput ? Number(jumlahInput.value) : 0;
+        let harga = 0;
+        let jumlah = 1;
         
-        const total = Number(harga) * Number(jumlah);
+        if (hargaInput && hargaInput.value) {
+            harga = parseFloat(hargaInput.value) || 0;
+        }
         
-        if (typeof total === 'number' && !isNaN(total) && isFinite(total)) {
-            row.querySelector('.total-cell').textContent = 'Rp ' + total.toLocale('id-ID');
+        if (jumlahInput && jumlahInput.value) {
+            jumlah = parseFloat(jumlahInput.value) || 1;
+        }
+        
+        const total = harga * jumlah;
+        
+        const totalCell = row.querySelector('.total-cell');
+        if (totalCell) {
+            totalCell.textContent = 'Rp ' + total.toLocaleString('id-ID');
             calculateGrandTotal();
         }
     }
@@ -273,8 +282,9 @@
                 grandTotal += Number(value) || 0;
             }
         });
-        if (!isNaN(grandTotal)) {
-            document.getElementById('grandTotal').textContent = 'Rp ' + grandTotal.toLocale('id-ID');
+        const grandTotalEl = document.getElementById('grandTotal');
+        if (grandTotalEl) {
+            grandTotalEl.textContent = 'Rp ' + grandTotal.toLocaleString('id-ID');
         }
     }
 
