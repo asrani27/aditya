@@ -13,18 +13,18 @@ class CustomerController extends Controller
     public function index(Request $request)
     {
         $query = Customer::query();
-        
+
         // Search functionality
         if ($request->has('search') && $request->search != '') {
             $search = $request->search;
-            $query->where(function($q) use ($search) {
+            $query->where(function ($q) use ($search) {
                 $q->where('kode_customer', 'like', '%' . $search . '%')
-                  ->orWhere('nama_customer', 'like', '%' . $search . '%')
-                  ->orWhere('telepon', 'like', '%' . $search . '%')
-                  ->orWhere('email', 'like', '%' . $search . '%');
+                    ->orWhere('nama_customer', 'like', '%' . $search . '%')
+                    ->orWhere('telepon', 'like', '%' . $search . '%')
+                    ->orWhere('email', 'like', '%' . $search . '%');
             });
         }
-        
+
         $customers = $query->orderBy('created_at', 'desc')->paginate(10);
         return view('admin.customer.index', compact('customers'));
     }
@@ -43,7 +43,7 @@ class CustomerController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'kode_customer' => 'required|string|max:255|unique:customers,kode_customer',
+            'kode_customer' => 'required|string|max:255|unique:customer,kode_customer',
             'nama_customer' => 'required|string|max:255',
             'alamat' => 'nullable|string',
             'telepon' => 'nullable|string|max:20',
@@ -80,7 +80,7 @@ class CustomerController extends Controller
     public function update(Request $request, Customer $customer)
     {
         $validated = $request->validate([
-            'kode_customer' => 'required|string|max:255|unique:customers,kode_customer,' . $customer->id,
+            'kode_customer' => 'required|string|max:255|unique:customer,kode_customer,' . $customer->id,
             'nama_customer' => 'required|string|max:255',
             'alamat' => 'nullable|string',
             'telepon' => 'nullable|string|max:20',

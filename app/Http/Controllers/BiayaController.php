@@ -13,16 +13,16 @@ class BiayaController extends Controller
     public function index(Request $request)
     {
         $query = Biaya::query();
-        
+
         // Search functionality
         if ($request->has('search') && $request->search != '') {
             $search = $request->search;
-            $query->where(function($q) use ($search) {
+            $query->where(function ($q) use ($search) {
                 $q->where('kode', 'like', '%' . $search . '%')
-                  ->orWhere('nama', 'like', '%' . $search . '%');
+                    ->orWhere('nama', 'like', '%' . $search . '%');
             });
         }
-        
+
         $biayas = $query->orderBy('created_at', 'desc')->paginate(10);
         return view('admin.biaya.index', compact('biayas'));
     }
@@ -41,7 +41,7 @@ class BiayaController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'kode' => 'required|string|max:255|unique:biayas,kode',
+            'kode' => 'required|string|max:255|unique:biaya,kode',
             'nama' => 'required|string|max:255',
             'deskripsi' => 'nullable|string',
             'harga' => 'required|integer|min:0',
@@ -75,7 +75,7 @@ class BiayaController extends Controller
     public function update(Request $request, Biaya $biaya)
     {
         $validated = $request->validate([
-            'kode' => 'required|string|max:255|unique:biayas,kode,' . $biaya->id,
+            'kode' => 'required|string|max:255|unique:biaya,kode,' . $biaya->id,
             'nama' => 'required|string|max:255',
             'deskripsi' => 'nullable|string',
             'harga' => 'required|integer|min:0',
