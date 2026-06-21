@@ -22,6 +22,7 @@ class MonitoringSeeder extends Seeder
                 'detail_tugas' => 'Mempersiapkan material dan alat kerja untuk tahap awal konstruksi',
                 'tanggal_selesai' => '2026-01-15',
                 'status' => 'Selesai',
+                'progress' => 100,
                 'keterangan' => 'Semua material sudah siap di lokasi',
             ],
             [
@@ -33,6 +34,7 @@ class MonitoringSeeder extends Seeder
                 'detail_tugas' => 'Pengecoran pondasi bangunan utama',
                 'tanggal_selesai' => '2026-02-01',
                 'status' => 'Selesai',
+                'progress' => 100,
                 'keterangan' => 'Pondasi sudah terpasang dengan baik',
             ],
             [
@@ -44,6 +46,7 @@ class MonitoringSeeder extends Seeder
                 'detail_tugas' => 'Pemasangan besi tulangan dan cetakan kolom',
                 'tanggal_selesai' => '2026-02-20',
                 'status' => 'Selesai',
+                'progress' => 100,
                 'keterangan' => 'Struktur kolom sudah selesai',
             ],
             [
@@ -55,6 +58,7 @@ class MonitoringSeeder extends Seeder
                 'detail_tugas' => 'Analisis lokasi dan kondisi tanah untuk pembangunan',
                 'tanggal_selesai' => '2026-03-05',
                 'status' => 'Selesai',
+                'progress' => 100,
                 'keterangan' => 'Hasil studi kelayakan sudah disetujui',
             ],
             [
@@ -66,6 +70,7 @@ class MonitoringSeeder extends Seeder
                 'detail_tugas' => 'Membuat desain arsitektur dan struktural detail',
                 'tanggal_selesai' => '2026-03-25',
                 'status' => 'Selesai',
+                'progress' => 100,
                 'keterangan' => 'Desain sudah final dan siap dieksekusi',
             ],
             [
@@ -77,6 +82,7 @@ class MonitoringSeeder extends Seeder
                 'detail_tugas' => 'Melakukan pengukuran akurat untuk pondasi',
                 'tanggal_selesai' => '2026-04-05',
                 'status' => 'Selesai',
+                'progress' => 100,
                 'keterangan' => 'Pengukuran selesai dengan akurasi tinggi',
             ],
             [
@@ -88,6 +94,7 @@ class MonitoringSeeder extends Seeder
                 'detail_tugas' => 'Instalasi sistem plumbing dan drainase',
                 'tanggal_selesai' => '2026-04-25',
                 'status' => 'Selesai',
+                'progress' => 100,
                 'keterangan' => 'Pipa sudah terpasang sesuai standar',
             ],
             [
@@ -99,6 +106,7 @@ class MonitoringSeeder extends Seeder
                 'detail_tugas' => 'Pengecatan dan penataan facade bangunan',
                 'tanggal_selesai' => '2026-05-20',
                 'status' => 'Dalam Progress',
+                'progress' => 75,
                 'keterangan' => 'Saat ini sedang dalam proses pengecatan',
             ],
             [
@@ -110,6 +118,7 @@ class MonitoringSeeder extends Seeder
                 'detail_tugas' => 'Pemasangan pintu dan jendela aluminium',
                 'tanggal_selesai' => '2026-06-01',
                 'status' => 'Dalam Progress',
+                'progress' => 70,
                 'keterangan' => 'Kusen sudah terpasang 70%',
             ],
             [
@@ -121,6 +130,7 @@ class MonitoringSeeder extends Seeder
                 'detail_tugas' => 'Pemasangan rangka atap dan penutup genteng',
                 'tanggal_selesai' => '2026-06-10',
                 'status' => 'Dalam Progress',
+                'progress' => 60,
                 'keterangan' => 'Rangka atap selesai, menunggu genteng',
             ],
             [
@@ -132,6 +142,7 @@ class MonitoringSeeder extends Seeder
                 'detail_tugas' => 'Pemasangan kabel dan saklar',
                 'tanggal_selesai' => '2026-06-15',
                 'status' => 'Menunggu',
+                'progress' => 0,
                 'keterangan' => 'Material sudah diorder',
             ],
             [
@@ -143,6 +154,7 @@ class MonitoringSeeder extends Seeder
                 'detail_tugas' => 'Pemasangan plafon dan lantai',
                 'tanggal_selesai' => '2026-06-25',
                 'status' => 'Menunggu',
+                'progress' => 0,
                 'keterangan' => 'Menunggu finishing exterior selesai',
             ],
         ];

@@ -21,6 +21,7 @@ class Monitoring extends Model
         'detail_tugas',
         'tanggal_selesai',
         'status',
+        'progress',
         'keterangan',
     ];
 

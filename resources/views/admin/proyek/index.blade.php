@@ -52,6 +52,7 @@
                         <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Customer</th>
                         <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Nilai Kontrak</th>
                         <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Status</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Progress</th>
                         <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Aksi</th>
                     </tr>
                 </thead>
@@ -92,6 +93,14 @@
                                 </span>
                             @endif
                         </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="flex items-center space-x-2">
+                                <div class="w-24 bg-gray-200 rounded-full h-2">
+                                    <div class="bg-blue-600 h-2 rounded-full" style="width: {{ $proyek->progress ?? 0 }}%"></div>
+                                </div>
+                                <span class="text-xs text-slate-600">{{ $proyek->progress ?? 0 }}%</span>
+                            </div>
+                        </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm">
                             <div class="flex items-center space-x-2">
                                 <a href="{{ route('admin.proyek.show', $proyek->id) }}"
@@ -120,7 +129,7 @@
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="7" class="px-6 py-8 text-center text-slate-500">
+                        <td colspan="8" class="px-6 py-8 text-center text-slate-500">
                             <i class="fas fa-project-diagram text-4xl mb-2"></i>
                             <p>Belum ada data proyek</p>
                         </td>

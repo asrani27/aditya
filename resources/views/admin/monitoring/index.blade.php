@@ -65,6 +65,7 @@
                         <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Proyek</th>
                         <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Tahapan</th>
                         <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Status</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Progress</th>
                         <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Aksi</th>
                     </tr>
                 </thead>
@@ -95,6 +96,14 @@
                                 <span class="px-2 py-1 text-xs font-semibold text-gray-800 bg-gray-100 rounded-full">Menunggu</span>
                             @endif
                         </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="flex items-center space-x-2">
+                                <div class="w-24 bg-gray-200 rounded-full h-2">
+                                    <div class="bg-blue-600 h-2 rounded-full" style="width: {{ $monitoring->progress ?? 0 }}%"></div>
+                                </div>
+                                <span class="text-xs text-slate-600">{{ $monitoring->progress ?? 0 }}%</span>
+                            </div>
+                        </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm">
                             <div class="flex items-center space-x-2">
                                 <a href="{{ route('admin.monitoring.show', $monitoring->id) }}"
@@ -123,7 +132,7 @@
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="7" class="px-6 py-8 text-center text-slate-500">
+                        <td colspan="8" class="px-6 py-8 text-center text-slate-500">
                             <i class="fas fa-clipboard text-4xl mb-2"></i>
                             <p>Belum ada data monitoring</p>
                         </td>
