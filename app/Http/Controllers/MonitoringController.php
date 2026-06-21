@@ -66,6 +66,7 @@ class MonitoringController extends Controller
             'detail_tugas' => 'required|string',
             'tanggal_selesai' => 'required|date',
             'status' => 'required|in:Selesai,Dalam Progress,Menunggu',
+            'progress' => 'nullable|integer|min:0|max:100',
             'keterangan' => 'nullable|string',
         ]);
 
@@ -109,6 +110,7 @@ class MonitoringController extends Controller
             'detail_tugas' => 'required|string',
             'tanggal_selesai' => 'required|date',
             'status' => 'required|in:Selesai,Dalam Progress,Menunggu',
+            'progress' => 'nullable|integer|min:0|max:100',
             'keterangan' => 'nullable|string',
         ]);
 

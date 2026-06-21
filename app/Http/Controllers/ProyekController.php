@@ -14,17 +14,17 @@ class ProyekController extends Controller
     public function index(Request $request)
     {
         $query = Proyek::with('customer');
-        
+
         // Search functionality
         if ($request->has('search') && $request->search != '') {
             $search = $request->search;
-            $query->where(function($q) use ($search) {
+            $query->where(function ($q) use ($search) {
                 $q->where('kode_proyek', 'like', '%' . $search . '%')
-                  ->orWhere('nama_proyek', 'like', '%' . $search . '%')
-                  ->orWhere('lokasi', 'like', '%' . $search . '%');
+                    ->orWhere('nama_proyek', 'like', '%' . $search . '%')
+                    ->orWhere('lokasi', 'like', '%' . $search . '%');
             });
         }
-        
+
         $proyeks = $query->orderBy('created_at', 'desc')->paginate(10);
         return view('admin.proyek.index', compact('proyeks'));
     }
@@ -44,7 +44,7 @@ class ProyekController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'kode_proyek' => 'required|string|max:255|unique:proyeks,kode_proyek',
+            'kode_proyek' => 'required|string|max:255|unique:proyek,kode_proyek',
             'customer_id' => 'required|exists:customers,id',
             'nama_proyek' => 'required|string|max:255',
             'deskripsi' => 'nullable|string',
@@ -86,7 +86,7 @@ class ProyekController extends Controller
     public function update(Request $request, Proyek $proyek)
     {
         $validated = $request->validate([
-            'kode_proyek' => 'required|string|max:255|unique:proyeks,kode_proyek,' . $proyek->id,
+            'kode_proyek' => 'required|string|max:255|unique:proyek,kode_proyek,' . $proyek->id,
             'customer_id' => 'required|exists:customers,id',
             'nama_proyek' => 'required|string|max:255',
             'deskripsi' => 'nullable|string',
