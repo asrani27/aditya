@@ -45,7 +45,7 @@ class ProyekController extends Controller
     {
         $validated = $request->validate([
             'kode_proyek' => 'required|string|max:255|unique:proyek,kode_proyek',
-            'customer_id' => 'required|exists:customers,id',
+            'customer_id' => 'required|exists:customer,id',
             'nama_proyek' => 'required|string|max:255',
             'deskripsi' => 'nullable|string',
             'lokasi' => 'nullable|string|max:255',
@@ -87,7 +87,7 @@ class ProyekController extends Controller
     {
         $validated = $request->validate([
             'kode_proyek' => 'required|string|max:255|unique:proyek,kode_proyek,' . $proyek->id,
-            'customer_id' => 'required|exists:customers,id',
+            'customer_id' => 'required|exists:customer,id',
             'nama_proyek' => 'required|string|max:255',
             'deskripsi' => 'nullable|string',
             'lokasi' => 'nullable|string|max:255',
