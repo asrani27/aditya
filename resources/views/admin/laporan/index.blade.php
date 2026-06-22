@@ -12,7 +12,7 @@
 
     <!-- Grid of Export Cards -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        
+
         <!-- Data Pegawai -->
         <div class="bg-white rounded-lg shadow p-6">
             <div class="flex items-center mb-4">
@@ -79,11 +79,13 @@
                 <div class="grid grid-cols-2 gap-3">
                     <div>
                         <label class="block text-xs text-slate-500 mb-1">Mulai Tanggal</label>
-                        <input type="date" id="filter-proyek-start" class="w-full border rounded px-3 py-2 text-sm" value="{{ date('Y-m-01') }}">
+                        <input type="date" id="filter-proyek-start" class="w-full border rounded px-3 py-2 text-sm"
+                            value="{{ date('Y-m-01') }}">
                     </div>
                     <div>
                         <label class="block text-xs text-slate-500 mb-1">Sampai Tanggal</label>
-                        <input type="date" id="filter-proyek-end" class="w-full border rounded px-3 py-2 text-sm" value="{{ date('Y-m-d') }}">
+                        <input type="date" id="filter-proyek-end" class="w-full border rounded px-3 py-2 text-sm"
+                            value="{{ date('Y-m-d') }}">
                     </div>
                 </div>
             </div>
@@ -108,11 +110,13 @@
                 <div class="grid grid-cols-2 gap-3">
                     <div>
                         <label class="block text-xs text-slate-500 mb-1">Mulai Tanggal</label>
-                        <input type="date" id="filter-penerimaan-start" class="w-full border rounded px-3 py-2 text-sm" value="{{ date('Y-m-01') }}">
+                        <input type="date" id="filter-penerimaan-start" class="w-full border rounded px-3 py-2 text-sm"
+                            value="{{ date('Y-m-01') }}">
                     </div>
                     <div>
                         <label class="block text-xs text-slate-500 mb-1">Sampai Tanggal</label>
-                        <input type="date" id="filter-penerimaan-end" class="w-full border rounded px-3 py-2 text-sm" value="{{ date('Y-m-d') }}">
+                        <input type="date" id="filter-penerimaan-end" class="w-full border rounded px-3 py-2 text-sm"
+                            value="{{ date('Y-m-d') }}">
                     </div>
                 </div>
             </div>
@@ -137,11 +141,13 @@
                 <div class="grid grid-cols-2 gap-3">
                     <div>
                         <label class="block text-xs text-slate-500 mb-1">Mulai Tanggal</label>
-                        <input type="date" id="filter-pengeluaran-start" class="w-full border rounded px-3 py-2 text-sm" value="{{ date('Y-m-01') }}">
+                        <input type="date" id="filter-pengeluaran-start" class="w-full border rounded px-3 py-2 text-sm"
+                            value="{{ date('Y-m-01') }}">
                     </div>
                     <div>
                         <label class="block text-xs text-slate-500 mb-1">Sampai Tanggal</label>
-                        <input type="date" id="filter-pengeluaran-end" class="w-full border rounded px-3 py-2 text-sm" value="{{ date('Y-m-d') }}">
+                        <input type="date" id="filter-pengeluaran-end" class="w-full border rounded px-3 py-2 text-sm"
+                            value="{{ date('Y-m-d') }}">
                     </div>
                 </div>
             </div>
@@ -184,11 +190,48 @@
                 <i class="fas fa-file-pdf mr-2"></i>Export PDF
             </a>
         </div>
+
+        <!-- Jurnal Umum -->
+        <div class="bg-white rounded-lg shadow p-6">
+            <div class="flex items-center mb-4">
+                <div class="w-12 h-12 bg-teal-100 rounded-lg flex items-center justify-center mr-4">
+                    <i class="fas fa-book text-teal-600 text-xl"></i>
+                </div>
+                <div>
+                    <h3 class="font-semibold text-slate-800">Jurnal Umum</h3>
+                    <p class="text-sm text-slate-500">Export jurnal umum debit & kredit</p>
+                </div>
+            </div>
+            <div class="mb-4">
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs text-slate-500 mb-1">Bulan</label>
+                        <select id="filter-jurnal-bulan" class="w-full border rounded px-3 py-2 text-sm">
+                            @foreach(['01' => 'Januari', '02' => 'Februari', '03' => 'Maret', '04' => 'April', '05' => 'Mei', '06' => 'Juni', '07' => 'Juli', '08' => 'Agustus', '09' => 'September', '10' => 'Oktober', '11' => 'November', '12' => 'Desember'] as $key => $value)
+                            <option value="{{ $key }}" {{ date('m') == $key ? 'selected' : '' }}>{{ $value }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs text-slate-500 mb-1">Tahun</label>
+                        <select id="filter-jurnal-tahun" class="w-full border rounded px-3 py-2 text-sm">
+                            @for($y = date('Y') - 5; $y <= date('Y'); $y++)
+                            <option value="{{ $y }}" {{ date('Y') == $y ? 'selected' : '' }}>{{ $y }}</option>
+                            @endfor
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <a href="#" onclick="exportJurnalUmum(); return false;"
+                class="block w-full bg-teal-600 text-white text-center py-2 rounded-lg hover:bg-teal-700 transition-colors">
+                <i class="fas fa-file-pdf mr-2"></i>Export PDF
+            </a>
+        </div>
     </div>
 </div>
 @endsection
 
-@section('scripts')
+@push('scripts')
 <script>
 function exportProyek() {
     var start = document.getElementById('filter-proyek-start').value;
@@ -207,5 +250,11 @@ function exportPengeluaran() {
     var end = document.getElementById('filter-pengeluaran-end').value;
     window.open('{{ route('admin.laporan.exportPengeluaran') }}?start=' + start + '&end=' + end, '_blank');
 }
+
+function exportJurnalUmum() {
+    var bulan = document.getElementById('filter-jurnal-bulan').value;
+    var tahun = document.getElementById('filter-jurnal-tahun').value;
+    window.open('{{ route('admin.laporan.exportJurnalUmum') }}?month=' + bulan + '&year=' + tahun, '_blank');
+}
 </script>
-@endsection
+@endpush

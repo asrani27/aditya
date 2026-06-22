@@ -17,7 +17,7 @@
 
     <!-- Form -->
     <div class="bg-white rounded-lg shadow p-6">
-        <form action="{{ route('admin.monitoring.store') }}" method="POST">
+        <form action="{{ route('admin.monitoring.store') }}" method="POST" id="monitoringForm">
             @csrf
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -140,15 +140,56 @@
                     @enderror
                 </div>
 
-                <!-- Progress -->
-                <div>
-                    <label for="progress" class="block text-sm font-medium text-slate-700 mb-2">
-                        Progress (%) <span class="text-red-500">*</span>
-                    </label>
-                    <input type="number" name="progress" id="progress" value="{{ old('progress', 0) }}" min="0" max="100"
-                        class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 @error('progress') border-red-500 @enderror"
-                        placeholder="0-100">
-                    @error('progress')
+                <!-- Detail Parameter Progress -->
+                <div class="md:col-span-2">
+                    <div class="flex items-center justify-between mb-2">
+                        <label class="block text-sm font-medium text-slate-700">
+                            Detail Parameter Progress <span class="text-red-500">*</span>
+                        </label>
+                        <button type="button" id="addDetailBtn"
+                            class="px-3 py-1 bg-green-600 text-white text-sm rounded-lg hover:bg-green-700 transition-colors">
+                            <i class="fas fa-plus mr-1"></i> Tambah Parameter
+                        </button>
+                    </div>
+                    
+                    <!-- Header Row -->
+                    <div class="grid grid-cols-12 gap-2 mb-2">
+                        <div class="col-span-7 text-sm font-medium text-slate-600">Parameter</div>
+                        <div class="col-span-4 text-sm font-medium text-slate-600">Progress (%)</div>
+                        <div class="col-span-1"></div>
+                    </div>
+                    
+                    <!-- Detail Rows Container -->
+                    <div id="detailContainer">
+                        <!-- Initial row -->
+                        <div class="grid grid-cols-12 gap-2 mb-2 detail-row">
+                            <div class="col-span-7">
+                                <input type="text" name="detail_parameter[]" placeholder="Contoh: Pasang Bata"
+                                    class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                    value="{{ old('detail_parameter.0') }}">
+                            </div>
+                            <div class="col-span-4">
+                                <input type="number" name="detail_progress[]" min="0" max="100" placeholder="0-100"
+                                    class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 detail-progress-input"
+                                    value="{{ old('detail_progress.0', 0) }}">
+                            </div>
+                            <div class="col-span-1 flex items-center justify-center">
+                                <button type="button" class="text-red-500 hover:text-red-700 remove-detail-btn" title="Hapus">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Total Progress Display -->
+                    <div class="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm font-medium text-blue-700">Total Progress:</span>
+                            <span id="totalProgress" class="text-2xl font-bold text-blue-700">0%</span>
+                        </div>
+                    </div>
+                    
+                    @error('detail_parameter')
                     <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
                     @enderror
                 </div>
@@ -183,3 +224,78 @@
     </div>
 </div>
 @endsection
+
+@push('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const container = document.getElementById('detailContainer');
+    const addBtn = document.getElementById('addDetailBtn');
+    const totalProgressEl = document.getElementById('totalProgress');
+    const statusSelect = document.getElementById('status');
+    
+    // Function to calculate total progress and update status
+    function calculateTotalProgress() {
+        let total = 0;
+        document.querySelectorAll('.detail-progress-input').forEach(function(input) {
+            total += parseInt(input.value) || 0;
+        });
+        totalProgressEl.textContent = total + '%';
+        
+        // Auto-set status to Selesai if progress is 100%
+        if (total >= 100) {
+            statusSelect.value = 'Selesai';
+        }
+    }
+    
+    // Add new detail row
+    addBtn.addEventListener('click', function() {
+        const newRow = document.createElement('div');
+        newRow.className = 'grid grid-cols-12 gap-2 mb-2 detail-row';
+        newRow.innerHTML = '<div class="col-span-7">' +
+            '<input type="text" name="detail_parameter[]" placeholder="Contoh: Cat Dinding" ' +
+            'class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">' +
+            '</div>' +
+            '<div class="col-span-4">' +
+            '<input type="number" name="detail_progress[]" min="0" max="100" placeholder="0-100" ' +
+            'class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 detail-progress-input" ' +
+            'value="0">' +
+            '</div>' +
+            '<div class="col-span-1 flex items-center justify-center">' +
+            '<button type="button" class="text-red-500 hover:text-red-700 remove-detail-btn" title="Hapus">' +
+            '<i class="fas fa-trash"></i>' +
+            '</button>' +
+            '</div>';
+        container.appendChild(newRow);
+        
+        // Add event listener to the new progress input
+        newRow.querySelector('.detail-progress-input').addEventListener('input', calculateTotalProgress);
+        
+        // Add remove functionality
+        newRow.querySelector('.remove-detail-btn').addEventListener('click', function() {
+            if (document.querySelectorAll('.detail-row').length > 1) {
+                newRow.remove();
+                calculateTotalProgress();
+            }
+        });
+    });
+    
+    // Add event listeners to existing progress inputs
+    document.querySelectorAll('.detail-progress-input').forEach(function(input) {
+        input.addEventListener('input', calculateTotalProgress);
+    });
+    
+    // Add remove functionality to existing remove buttons
+    document.querySelectorAll('.remove-detail-btn').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+            if (document.querySelectorAll('.detail-row').length > 1) {
+                btn.closest('.detail-row').remove();
+                calculateTotalProgress();
+            }
+        });
+    });
+    
+    // Calculate initial total
+    calculateTotalProgress();
+});
+</script>
+@endpush

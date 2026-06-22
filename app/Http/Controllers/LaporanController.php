@@ -211,4 +211,68 @@ class LaporanController extends Controller
         
         return $pdf->stream('laporan-users.pdf');
     }
+
+    /**
+     * Export Jurnal Umum to PDF
+     */
+    public function exportJurnalUmum(Request $request)
+    {
+        $month = $request->month ?? date('m');
+        $year = $request->year ?? date('Y');
+        
+        // Get Penerimaan Dana (Debit)
+        $penerimaans = PenerimaanDana::whereMonth('tanggal', $month)
+            ->whereYear('tanggal', $year)
+            ->orderBy('tanggal', 'asc')
+            ->get();
+        
+        // Get Pengeluaran Dana (Kredit)
+        $pengeluarans = PengeluaranDana::whereMonth('tanggal', $month)
+            ->whereYear('tanggal', $year)
+            ->orderBy('tanggal', 'asc')
+            ->get();
+        
+        // Combine and sort by date
+        $jurnals = collect();
+        
+        foreach ($penerimaans as $item) {
+            $jurnals->push([
+                'tanggal' => $item->tanggal,
+                'deskripsi' => $item->keterangan,
+                'debit' => $item->dana_diterima,
+                'kredit' => 0,
+                'tipe' => 'penerimaan'
+            ]);
+        }
+        
+        foreach ($pengeluarans as $item) {
+            $jurnals->push([
+                'tanggal' => $item->tanggal,
+                'deskripsi' => $item->keterangan,
+                'debit' => 0,
+                'kredit' => $item->total,
+                'tipe' => 'pengeluaran'
+            ]);
+        }
+        
+        $jurnals = $jurnals->sortBy('tanggal')->values();
+        
+        $totalDebit = $jurnals->sum('debit');
+        $totalKredit = $jurnals->sum('kredit');
+        
+        $pdf = Pdf::loadView('admin.laporan.pdf.jurnalumum', [
+            'jurnals' => $jurnals,
+            'title' => 'Laporan Jurnal Umum',
+            'company' => 'PT. SUKA TEKNIK PROPERTI',
+            'date' => date('d F Y'),
+            'filterMonth' => $month,
+            'filterYear' => $year,
+            'totalDebit' => $totalDebit,
+            'totalKredit' => $totalKredit
+        ]);
+        
+        $pdf->setPaper('A4', 'portrait');
+        
+        return $pdf->stream('laporan-jurnal-umum.pdf');
+    }
 }

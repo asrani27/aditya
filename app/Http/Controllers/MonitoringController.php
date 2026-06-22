@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Monitoring;
+use App\Models\MonitoringDetail;
 use App\Models\Proyek;
 use App\Models\Pegawai;
 use Illuminate\Http\Request;
@@ -66,11 +67,35 @@ class MonitoringController extends Controller
             'detail_tugas' => 'required|string',
             'tanggal_selesai' => 'required|date',
             'status' => 'required|in:Selesai,Dalam Progress,Menunggu',
-            'progress' => 'nullable|integer|min:0|max:100',
             'keterangan' => 'nullable|string',
         ]);
 
-        Monitoring::create($validated);
+        // Calculate total progress from details
+        $progress = 0;
+        $details = [];
+        if ($request->has('detail_parameter') && is_array($request->detail_parameter)) {
+            foreach ($request->detail_parameter as $index => $parameter) {
+                if (!empty($parameter)) {
+                    $detailProgress = $request->detail_progress[$index] ?? 0;
+                    $progress += (int)$detailProgress;
+                    $details[] = [
+                        'parameter' => $parameter,
+                        'progress' => (int)$detailProgress,
+                    ];
+                }
+            }
+        }
+
+        $monitoring = Monitoring::create(array_merge($validated, ['progress' => $progress]));
+
+        // Save details
+        foreach ($details as $detail) {
+            MonitoringDetail::create([
+                'monitoring_id' => $monitoring->id,
+                'parameter' => $detail['parameter'],
+                'progress' => $detail['progress'],
+            ]);
+        }
 
         return redirect()->route('admin.monitoring.index')
             ->with('success', 'Data monitoring berhasil ditambahkan.');
@@ -93,6 +118,7 @@ class MonitoringController extends Controller
         $proyeks = Proyek::orderBy('kode_proyek')->get();
         $pegawais = Pegawai::orderBy('nama')->get();
         $statusOptions = ['Selesai', 'Dalam Progress', 'Menunggu'];
+        $monitoring->load('details');
         return view('admin.monitoring.edit', compact('monitoring', 'proyeks', 'pegawais', 'statusOptions'));
     }
 
@@ -110,11 +136,36 @@ class MonitoringController extends Controller
             'detail_tugas' => 'required|string',
             'tanggal_selesai' => 'required|date',
             'status' => 'required|in:Selesai,Dalam Progress,Menunggu',
-            'progress' => 'nullable|integer|min:0|max:100',
             'keterangan' => 'nullable|string',
         ]);
 
-        $monitoring->update($validated);
+        // Calculate total progress from details
+        $progress = 0;
+        $details = [];
+        if ($request->has('detail_parameter') && is_array($request->detail_parameter)) {
+            foreach ($request->detail_parameter as $index => $parameter) {
+                if (!empty($parameter)) {
+                    $detailProgress = $request->detail_progress[$index] ?? 0;
+                    $progress += (int)$detailProgress;
+                    $details[] = [
+                        'parameter' => $parameter,
+                        'progress' => (int)$detailProgress,
+                    ];
+                }
+            }
+        }
+
+        $monitoring->update(array_merge($validated, ['progress' => $progress]));
+
+        // Delete old details and create new ones
+        $monitoring->details()->delete();
+        foreach ($details as $detail) {
+            MonitoringDetail::create([
+                'monitoring_id' => $monitoring->id,
+                'parameter' => $detail['parameter'],
+                'progress' => $detail['progress'],
+            ]);
+        }
 
         return redirect()->route('admin.monitoring.index')
             ->with('success', 'Data monitoring berhasil diperbarui.');

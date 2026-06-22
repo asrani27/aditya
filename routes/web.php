@@ -108,4 +108,5 @@ Route::prefix('admin')->group(function () {
     Route::get('/laporan/export/pengeluaran', [LaporanController::class, 'exportPengeluaran'])->name('admin.laporan.exportPengeluaran');
     Route::get('/laporan/export/monitoring', [LaporanController::class, 'exportMonitoring'])->name('admin.laporan.exportMonitoring');
     Route::get('/laporan/export/users', [LaporanController::class, 'exportUsers'])->name('admin.laporan.exportUsers');
+    Route::get('/laporan/export/jurnal-umum', [LaporanController::class, 'exportJurnalUmum'])->name('admin.laporan.exportJurnalUmum');
 })->middleware('auth');
