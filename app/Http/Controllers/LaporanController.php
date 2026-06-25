@@ -271,7 +271,7 @@ class LaporanController extends Controller
             'totalKredit' => $totalKredit
         ]);
         
-        $pdf->setPaper('A4', 'portrait');
+        $pdf->setPaper('A4', 'landscape');
         
         return $pdf->stream('laporan-jurnal-umum.pdf');
     }

@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>{{ $title }}</title>
+    <title>BUKU KAS</title>
     <style>
         body {
             font-family: 'DejaVu Sans', sans-serif;
@@ -112,9 +112,10 @@
         <h1>{{ $company }}</h1>
         <p class="address">Komplek Kota Citra Graha Ruko Nomor 6, Banjarbaru, Kalimantan Selatan</p>
         <div class="separator"></div>
-        <p class="title">{{ $title }}</p>
+        <p class="title">BUKU KAS</p>
         <p class="date">Tanggal Cetak: {{ $date }}</p>
-        <p class="filter-info">Periode: {{ \Carbon\Carbon::createFromDate($filterYear, $filterMonth, 1)->format('F Y') }}</p>
+        <p class="filter-info">Periode: {{ \Carbon\Carbon::createFromDate($filterYear, $filterMonth, 1)->format('F Y')
+            }}</p>
     </div>
 
     <table>
@@ -125,26 +126,39 @@
                 <th>Deskripsi</th>
                 <th class="text-right" style="width: 130px;">Debit</th>
                 <th class="text-right" style="width: 130px;">Kredit</th>
+                <th class="text-right" style="width: 130px;">Saldo</th>
             </tr>
         </thead>
         <tbody>
+            @php $saldo = 0; @endphp
             @forelse($jurnals as $index => $item)
+            @php $saldo += ($item['debit'] ?? 0) - ($item['kredit'] ?? 0); @endphp
             <tr>
                 <td class="text-center">{{ $index + 1 }}</td>
                 <td class="text-center">{{ \Carbon\Carbon::parse($item['tanggal'])->format('d/m/Y') }}</td>
                 <td>{{ $item['deskripsi'] ?? '-' }}</td>
-                <td class="text-right">{{ $item['debit'] > 0 ? 'Rp ' . number_format($item['debit'], 0, ',', '.') : '-' }}</td>
-                <td class="text-right">{{ $item['kredit'] > 0 ? 'Rp ' . number_format($item['kredit'], 0, ',', '.') : '-' }}</td>
+                <td class="text-right">{{ $item['debit'] > 0 ? 'Rp ' . number_format($item['debit'], 0, ',', '.') : '-'
+                    }}</td>
+                <td class="text-right">{{ $item['kredit'] > 0 ? 'Rp ' . number_format($item['kredit'], 0, ',', '.') :
+                    '-' }}</td>
+                <td class="text-right">Rp {{ number_format($saldo, 0, ',', '.') }}</td>
             </tr>
             @empty
             <tr>
-                <td colspan="5" class="text-center">Tidak ada data</td>
+                <td colspan="6" class="text-center">Tidak ada data</td>
             </tr>
             @endforelse
             <tr class="total-row">
-                <td colspan="3" class="text-right">TOTAL</td>
+                <td colspan="3" class="text-right">SALDO</td>
                 <td class="text-right">Rp {{ number_format($totalDebit ?? 0, 0, ',', '.') }}</td>
                 <td class="text-right">Rp {{ number_format($totalKredit ?? 0, 0, ',', '.') }}</td>
+                <td class="text-right"></td>
+            </tr>
+            <tr class="total-row">
+                <td colspan="3" class="text-right">KEUNTUNGAN</td>
+                <td class="text-right"></td>
+                <td class="text-right"></td>
+                <td class="text-right">Rp {{ number_format($saldo ?? 0, 0, ',', '.') }}</td>
             </tr>
         </tbody>
     </table>

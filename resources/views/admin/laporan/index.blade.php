@@ -198,8 +198,8 @@
                     <i class="fas fa-book text-teal-600 text-xl"></i>
                 </div>
                 <div>
-                    <h3 class="font-semibold text-slate-800">Jurnal Umum</h3>
-                    <p class="text-sm text-slate-500">Export jurnal umum debit & kredit</p>
+                    <h3 class="font-semibold text-slate-800">Buku Kas</h3>
+                    <p class="text-sm text-slate-500">Export Buku Kas debit & kredit</p>
                 </div>
             </div>
             <div class="mb-4">
@@ -207,17 +207,19 @@
                     <div>
                         <label class="block text-xs text-slate-500 mb-1">Bulan</label>
                         <select id="filter-jurnal-bulan" class="w-full border rounded px-3 py-2 text-sm">
-                            @foreach(['01' => 'Januari', '02' => 'Februari', '03' => 'Maret', '04' => 'April', '05' => 'Mei', '06' => 'Juni', '07' => 'Juli', '08' => 'Agustus', '09' => 'September', '10' => 'Oktober', '11' => 'November', '12' => 'Desember'] as $key => $value)
-                            <option value="{{ $key }}" {{ date('m') == $key ? 'selected' : '' }}>{{ $value }}</option>
+                            @foreach(['01' => 'Januari', '02' => 'Februari', '03' => 'Maret', '04' => 'April', '05' =>
+                            'Mei', '06' => 'Juni', '07' => 'Juli', '08' => 'Agustus', '09' => 'September', '10' =>
+                            'Oktober', '11' => 'November', '12' => 'Desember'] as $key => $value)
+                            <option value="{{ $key }}" {{ date('m')==$key ? 'selected' : '' }}>{{ $value }}</option>
                             @endforeach
                         </select>
                     </div>
                     <div>
                         <label class="block text-xs text-slate-500 mb-1">Tahun</label>
                         <select id="filter-jurnal-tahun" class="w-full border rounded px-3 py-2 text-sm">
-                            @for($y = date('Y') - 5; $y <= date('Y'); $y++)
-                            <option value="{{ $y }}" {{ date('Y') == $y ? 'selected' : '' }}>{{ $y }}</option>
-                            @endfor
+                            @for($y = date('Y') - 5; $y <= date('Y'); $y++) <option value="{{ $y }}" {{ date('Y')==$y
+                                ? 'selected' : '' }}>{{ $y }}</option>
+                                @endfor
                         </select>
                     </div>
                 </div>
@@ -233,7 +235,7 @@
 
 @push('scripts')
 <script>
-function exportProyek() {
+    function exportProyek() {
     var start = document.getElementById('filter-proyek-start').value;
     var end = document.getElementById('filter-proyek-end').value;
     window.open('{{ route('admin.laporan.exportProyek') }}?start=' + start + '&end=' + end, '_blank');
